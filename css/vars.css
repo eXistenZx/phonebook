@@ -1,0 +1,5 @@
+html {
+	--color: grey;
+	--color-light: lighten(var(--color), 30%);
+	--color-dark: darken(var(--color), 30%);
+}
