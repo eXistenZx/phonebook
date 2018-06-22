@@ -2,18 +2,18 @@
 include 'header.php';
 require_once "database.php";
 
-// Request to get all contacts
-$sql = "SELECT * FROM contacts ORDER BY contact_name ASC";
-$sql_all_contacts = $db_connect->query($sql);
-// Get number of contacts
-$total_contacts = $sql_all_contacts->rowCount();
+$contacts = $db_connect->query("SELECT * FROM contacts ORDER BY contact_name ASC");
+$total_contacts = $contacts->rowCount();
 
-// Get list of contacts in an object
-$statement = $db_connect->prepare($sql);
-$statement->execute();
-$contacts = $statement->fetchAll(PDO::FETCH_OBJ);
+if(isset($_GET['q']) AND !empty($_GET['q'])) {
+  $q = htmlspecialchars($_GET['q']);
+  $contacts = $db_connect->query("SELECT * FROM contacts WHERE contact_name LIKE '%$q%' OR contact_phone LIKE '%$q%' ORDER BY contact_name ASC");
+
+  if($contacts->rowCount() == 0) {
+    $contacts = $db_connect->query("SELECT * FROM contacts WHERE CONCAT(contact_name, contact_phone) LIKE '%$q%' OREDER BY contact_name ASC");
+  }
+}
 ?>
-
 <!-- content section -->
 <div class="container">
 	<div class="card-header">
@@ -29,16 +29,25 @@ $contacts = $statement->fetchAll(PDO::FETCH_OBJ);
 				</tr>
 			</thead>
 			<tbody>
-				<?php foreach ($contacts as $contact): ?>
-					<tr>
-						<td><?= $contact->contact_name; ?></td>
-						<td><?= $contact->contact_phone; ?></td>
-						<td>
-							<a href="edit-contact.php?id=<?= $contact->contact_id ?>" class="btn btn-info">Modifier</a>
-							<a onclick="return confirm('Êtes vous sûr de vouloir supprimer ce contact ?')" href="delete-contact.php?id=<?= $contact->contact_id ?>" class="btn btn-danger">Supprimer</a>
-						</td>
-					</tr>
-				<?php endforeach; ?>
+        <?php
+        if($contacts->rowCount() > 0) { ?>
+          <?php
+          while($a = $contacts->fetch()) { ?>
+          <tr>
+            <td><?= $a['contact_name'] ?></td>
+            <td><?= $a['contact_phone'] ?></td>
+            <td>
+              <a href="edit-contact.php?id=<?= $a['contact_id'] ?>" class="btn btn-info">Modifier</a>
+              <a onclick="return confirm('Êtes vous sûr de vouloir supprimer ce contact ?')" href="delete-contact.php?id=<?= $a['contact_id'] ?>" class="btn btn-danger">Supprimer</a>
+            </td>
+          </tr>
+          <?php
+          }
+        }
+        else { ?>
+          Aucun résultat pour: <?= $q ?>...
+        <?php
+        } ?>
 			</tbody>
 		</table>
 	</div>

@@ -5,3 +5,5 @@ create table contacts (
   contact_name varchar(255) not null,
   contact_phone varchar(50) not null
 );
+
+use phone_book;

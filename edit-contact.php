@@ -25,12 +25,11 @@ if ( isset($_POST['name']) && isset($_POST['phone']) ) {
 		)))
 		{
 		$message = 'Modification effectuée';
-			// redirect to index.php page after 0.5sec to read confirm message
+		// redirect to index.php page after 0.5sec to read confirm message
 		header("Refresh: 0.5; url=index.php");
-		}
 	}
+}
 ?>
-
 
 <div class="container">
 	<div class="card text-center">
@@ -41,11 +40,11 @@ if ( isset($_POST['name']) && isset($_POST['phone']) ) {
 			<form method="post">
 				<div class="form-group">
 					<label for="name">Nom</label>
-					<input type="text" name="name" id="name" class="form-control" value="<?= $contact->contact_name; ?>" pattern="[a-z]{3-20}">
+					<input type="text" name="name" id="name" class="form-control" value="<?= $contact->contact_name; ?>" pattern="[A-z]{3-20}">
 				</div>
 				<div class="form-group">
 					<label for="phone">Numéro de téléphone<label>
-					<input type="tel" name="phone" id="phone" class="form-control" value="<?= $contact->contact_phone; ?>" pattern="[0-9]{10}">
+					<input type="tel" name="phone" id="phone" class="form-control" value="<?= $contact->contact_phone; ?>" pattern="[0-9]{10,}">
 				</div>
 				<div class="form-group">
 					<button type="submit" name="btn" class="btn btn-success">Valider</button>
