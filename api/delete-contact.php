@@ -1,10 +1,10 @@
 <?php
 include('header.php');
 
-if( !empty($_POST['contact_id']) ){
-	// Si le client a saisi un id
+if( !empty($_GET['contact_id']) ){
+	// If client entry ID
 	$sql = $db_connect->prepare("DELETE FROM contacts WHERE contact_id = :id");
-	$sql->bindParam(':id', $_POST['contact_id']);
+	$sql->bindParam(':id', $_GET['contact_id']);
 	$sql->execute();
 
 	$return["success"] = true;

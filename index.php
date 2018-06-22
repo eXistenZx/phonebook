@@ -17,7 +17,7 @@ if(isset($_GET['q']) AND !empty($_GET['q'])) {
 <!-- content section -->
 <div class="container">
 	<div class="card-header">
-		<h5><?php echo "Vous avez " . $total_contacts . " contacts dans votre annuaire" ?></h5>
+		<h5><?php echo "Vous avez " . $total_contacts . " contacts dans votre sélection" ?></h5>
 	</div>
 	<div class="card-body">
 		<table class="table table-bordered">
