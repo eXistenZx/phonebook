@@ -31,7 +31,7 @@ if ( isset($_POST['name']) && isset($_POST['phone']) ) {
 }
 ?>
 
-<div class="container">
+<div class="container edit-container container-fluid">
 	<div class="card text-center">
 		<div class="card-header">
 			<h2>Modifier un contact</h2>
@@ -43,7 +43,7 @@ if ( isset($_POST['name']) && isset($_POST['phone']) ) {
 					<input type="text" name="name" id="name" class="form-control" value="<?= $contact->contact_name; ?>" pattern="[A-z]{3-20}">
 				</div>
 				<div class="form-group">
-					<label for="phone">Numéro de téléphone<label>
+					<label for="phone">Numéro de téléphone</label>
 					<input type="tel" name="phone" id="phone" class="form-control" value="<?= $contact->contact_phone; ?>" pattern="[0-9]{10,}">
 				</div>
 				<div class="form-group">

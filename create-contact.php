@@ -21,7 +21,7 @@ if ( isset($_POST['name']) && isset($_POST['phone']) ) {
 }
 ?>
 
-<div class="container">
+<div class="container add-container container-fluid">
 	<div class="card text-center">
 		<div class="card-header">
 			<h2>Ajouter un contact</h2>
@@ -34,7 +34,7 @@ if ( isset($_POST['name']) && isset($_POST['phone']) ) {
 				</div>
 				<div class="form-group">
 					<label for="phone">Numéro de téléphone</label>
-					<input type="text" name="phone" id="phone" class="form-control" placeholder="Saisissez le numéro de votre contact" pattern="[0-9]{10}">
+					<input type="text" name="phone" id="phone" class="form-control" placeholder="Saisissez le numéro de votre contact" pattern="[0-9]{10,}">
 				</div>
 				<div class="form-group">
 					<button type="submit" name="btn" class="btn btn-primary">Ajouter</button>

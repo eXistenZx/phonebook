@@ -3,7 +3,7 @@ include 'header.php';
 require_once "database.php";
 
 $contacts = $db_connect->query("SELECT * FROM contacts ORDER BY contact_name ASC");
-$total_contacts = $contacts->rowCount();
+$full_contacts = $contacts->rowCount();
 
 if(isset($_GET['q']) AND !empty($_GET['q'])) {
   $q = htmlspecialchars($_GET['q']);
@@ -13,19 +13,20 @@ if(isset($_GET['q']) AND !empty($_GET['q'])) {
     $contacts = $db_connect->query("SELECT * FROM contacts WHERE CONCAT(contact_name, contact_phone) LIKE '%$q%' OREDER BY contact_name ASC");
   }
 }
+$select_contacts = $contacts->rowCount();
 ?>
 <!-- content section -->
-<div class="container">
+<div class="container container-fluid">
 	<div class="card-header">
-		<h5><?php echo "Vous avez " . $total_contacts . " contacts dans votre sélection" ?></h5>
+		<h5><?php echo "Vous avez " . $select_contacts . " / " . $full_contacts . " contacts dans votre sélection" ?></h5>
 	</div>
 	<div class="card-body">
 		<table class="table table-bordered">
 			<thead>
 				<tr>
-					<th>Nom</th>
-					<th>Téléphone</th>
-					<th>Actions</th>
+					<th class="name-column">Nom</th>
+					<th class="phone-column">Téléphone</th>
+					<th class="action-column">Actions</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -34,9 +35,9 @@ if(isset($_GET['q']) AND !empty($_GET['q'])) {
           <?php
           while($a = $contacts->fetch()) { ?>
           <tr>
-            <td><?= $a['contact_name'] ?></td>
-            <td><?= $a['contact_phone'] ?></td>
-            <td>
+            <td class="name-column"><?= $a['contact_name'] ?></td>
+            <td class="phone-column"><?= $a['contact_phone'] ?></td>
+            <td class="action-column">
               <a href="edit-contact.php?id=<?= $a['contact_id'] ?>" class="btn btn-info">Modifier</a>
               <a onclick="return confirm('Êtes vous sûr de vouloir supprimer ce contact ?')" href="delete-contact.php?id=<?= $a['contact_id'] ?>" class="btn btn-danger">Supprimer</a>
             </td>
