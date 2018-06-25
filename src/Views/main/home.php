@@ -7,11 +7,13 @@
     </div>
     <?php
     if(!empty($message)): ?>
-        <div class="alert alert-success">
+        <div class="alert alert-success" role="alert">
             <?php
-            // set_time_limit(1);
-            echo $message
+            echo $message;
             ?>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
     <?php
     endif; ?>

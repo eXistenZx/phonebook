@@ -25,7 +25,8 @@ class ContactsController extends CoreController
                 if ($contact->save() != 1) {
                     $message ='Problème de base de données';
                 } else {
-                    $this->redirect('home')->with(['message' => 'Le contact a bien été ajouté..']);
+                    $this->storeMessage('Le contact a bien été ajouté!!');
+                    $this->redirect('home');
                 }
             }
         }
@@ -39,7 +40,8 @@ class ContactsController extends CoreController
             $contact->delete();
             $message = 'Le contact a bien été supprimé..';
         }
-        $this->redirect('home')->with(['message' => $message]);
+        $this->storeMessage('Le contact a bien été supprimé!!');
+        $this->redirect('home');
     }
 
     // Find one or more contacts
@@ -77,7 +79,8 @@ class ContactsController extends CoreController
                 $contact->setPhone($_POST['phone']);
                 $contact->update();
 
-                $this->redirect('home')->with(['message'=>'Contact modifié!!']);
+                $this->storeMessage('Le contact a bien été modifié!!');
+                $this->redirect('home');
             }
         }
         echo $this->templates->render('contacts/update', ['message' => $message, 'contact' => $contact]);
