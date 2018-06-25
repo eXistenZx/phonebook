@@ -1,0 +1,11 @@
+
+; définition des variables de configuration du projet
+
+; config du router
+BASE_PATH = '/basepath/de/votre/projet'
+
+; config de la BD
+DB_HOST = 'yourdbhost'
+DB_NAME = 'yourdbname'
+DB_USER = 'yourdbuser'
+DB_PASS = 'yourdbpass'

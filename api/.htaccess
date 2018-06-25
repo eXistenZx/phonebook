@@ -1,5 +1,0 @@
-RewriteEngine On
-RewriteRule ^contacts$ contacts.php
-RewriteRule ^contacts/([a-zA-Z]+)$ contacts.php?contact_name=$1
-RewriteRule ^contacts/delete/([0-9]+)$ delete-contact.php?contact_id=$1
-Options -MultiViews
