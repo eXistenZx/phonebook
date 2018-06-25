@@ -18,6 +18,6 @@ Tests avec POSTMAN
 
 ## A développer
 
-### Sécurité
-### Recherche avec plusieurs termes
-### Recherche phonétique : https://connect.ed-diamond.com/GNU-Linux-Magazine/GLMF-094/Ecriture-d-une-fonction-de-reconnaissance-phonetique-pour-MySQL
+- Sécurité
+- Recherche avec plusieurs termes
+- Recherche phonétique : https://connect.ed-diamond.com/GNU-Linux-Magazine/GLMF-094/Ecriture-d-une-fonction-de-reconnaissance-phonetique-pour-MySQL
