@@ -2,53 +2,47 @@
 
 namespace Phonebook\Controllers;
 
+use \Phonebook\Models\ContactsModel;
+
 class ContactsController extends CoreController
 {
-
+    // Create contact
     public function create()
     {
-        $message = "";
-        // if ( isset($_POST['name']) && isset($_POST['phone']) ) {
-        //
-        //     $contact = new \Phonebook\Models\ContactsModel();
-        //     $contact->setContact($_POST['contact_name']);
-        //     $contact->setPhone($_POST['contact_phone']);
-        //     $contact->save();
-        //     // header('Location: ' . $this->router->generate('home') );
-        //     // echo 'OK';
-        //     exit();
-        // } else {
-        //     echo json_encode($errors);
-        //     exit();
-        //     }
-        // echo $this->templates->render('contacts/create', [ 'message' => $message ]);
-        echo $this->templates->render('contact/create');
+        $message = '';
+
+        if (isset($_POST['name']) && isset($_POST['phone'])) {
+
+            if (strlen($_POST['name']) < 2 || strlen($_POST['phone']) < 10 ) {
+            $message = 'Il manque des caractères';
+            }
+
+            if (empty($message)) {
+                $contact = new ContactsModel();
+                $contact->setName($_POST['name']);
+                $contact->setPhone($_POST['phone']);
+
+                if ($contact->save() != 1) {
+                    $message ='Problème de base de données';
+                } else {
+                    $this->redirect('home')->with(['message' => 'Le contact a bien été ajouté..']);
+                }
+            }
+        }
+        echo $this->templates->render('contacts/create', [ 'message' => $message ]);
     }
 
-
+    // Delete contact
     public function delete() {
-        // On récupère l'ID du membre
-        // $id = $params['id'];
-        $id = $_GET['id'];
-        // Appeler la méthode de suppression
-        $contact = \Phonebook\Models\ContactsModel::delete_contact($id);
-        // $id->delete_contact($id);
-        // On redirige vers la liste des communautés
-        $this->redirect('home')->with(['message'=>'Contact supprimé!!']);
+        if(isset($_GET['id']) AND !empty($_GET['id'])) {
+            $contact = ContactsModel::findById($_GET['id']);
+            $contact->delete();
+            $message = 'Le contact a bien été supprimé..';
+        }
+        $this->redirect('home')->with(['message' => $message]);
     }
 
-    // public function contacts_delete($id) {
-    //   $contact = \Phonebook\Models\ContactsModel::delete($id);
-    //   $id = htmlspecialchars($_GET['id']);
-    //   if ($statement->execute([':id' => $id])) {
-    //   	// redirect to index.php page
-    //   	header("Refresh: 0;url=$router->generate('home');");
-    //     echo $this->templates->render('contacts/delete');
-    //   }
-    // }
-
-
-    // Permet de rechercher un ou des contacts
+    // Find one or more contacts
     public static function search() {
         if(isset($_GET['q']) AND !empty($_GET['q'])) {
             $q = htmlspecialchars($_GET['q']);
@@ -62,15 +56,34 @@ class ContactsController extends CoreController
     echo $this->templates->render('home');
     }
 
-
-
-    // Permet de modifier un contact
+    // Update contact
     public function update() {
 
-    echo $this->templates->render('contacts/update');
+        $message = '';
+        $contact = ContactsModel::findById($_GET['id']);
+
+        if (empty($contact->getName())) {
+          $message = 'Impossible de trouver le contact';
+        }
+
+        if (empty($message) && isset($_POST['name']) && isset($_POST['phone'])) {
+
+            if (strlen($_POST['name']) < 2 || strlen($_POST['phone']) < 10 ) {
+            $message = 'Il manque des caractères';
+            }
+
+            if (empty($message)) {
+                $contact->setName($_POST['name']);
+                $contact->setPhone($_POST['phone']);
+                $contact->update();
+
+                $this->redirect('home')->with(['message'=>'Contact modifié!!']);
+            }
+        }
+        echo $this->templates->render('contacts/update', ['message' => $message, 'contact' => $contact]);
     }
 
-
+    // Count number of selected contacts
     public static function nbContactsSelected() {
         $total = self::search();
         $selected_contacts = Count($total);
@@ -78,6 +91,7 @@ class ContactsController extends CoreController
         echo $this->templates->render('home');
     }
 
+    // Count number of contact in DB
     public static function nbContactsTotal() {
         $total = \Phonebook\Models\CoreModel::findAll();
         $full_contacts = Count($total);
@@ -85,7 +99,7 @@ class ContactsController extends CoreController
         echo $this->templates->render('home');
     }
 
-
+    // Get search term
     public static function getQ() {
         if(isset($_GET['q'])) {
             $q = htmlspecialchars($_GET['q']);
@@ -93,6 +107,7 @@ class ContactsController extends CoreController
         }
     }
 
+    // Make sentence to inform how many contacts selected and in DB
     public static function homeSentence() {
         $q = self::getQ();
         $nb_result = self::nbContactsSelected();

@@ -16,14 +16,14 @@ class Application
 
     public function mapping()
     {
-        // La page d'accueil
+        // Home page
         $this->router->map('GET', '/', ['MainController', 'home'], 'home');
         // Create contact page
-        $this->router->map('POST', '/contact/create', ['ContactsController', 'create'], 'contact_create');
+        $this->router->map('GET|POST', '/contact/create', ['ContactsController', 'create'], 'contact_create');
         // Search contact
         $this->router->map('GET', '/', ['ContactsController', 'search'], 'contacts_search');
         // Update contact page
-        $this->router->map('POST', '/contact/update', ['ContactsController', 'update'], 'contact_update');
+        $this->router->map('GET|POST', '/contact/update', ['ContactsController', 'update'], 'contact_update');
         // Delete contact
         $this->router->map('GET', '/delete', ['ContactsController', 'delete'], 'contact_delete');
     }

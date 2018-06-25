@@ -5,6 +5,16 @@
     <div class="card-header">
         <h5><?= \Phonebook\Controllers\ContactsController::homeSentence() ?></h5>
     </div>
+    <?php
+    if(!empty($message)): ?>
+        <div class="alert alert-success">
+            <?php
+            // set_time_limit(1);
+            echo $message
+            ?>
+        </div>
+    <?php
+    endif; ?>
     <div class="card-body">
         <table class="table table-bordered">
             <thead>

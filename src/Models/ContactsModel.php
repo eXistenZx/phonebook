@@ -1,87 +1,77 @@
 <?php
-
 namespace Phonebook\Models;
+use \Phonebook\Utils\Database;
 
 class ContactsModel extends CoreModel
 {
-
+    
     protected static $tableName = 'contacts';
     protected static $orderBy = 'contact_name ASC';
+    protected $contact_id;
+    protected $contact_name;
+    protected $contact_phone;
+    protected $db;
 
-    protected $id;
-    protected $contact;
-    protected $phone;
+    public function __construct()
+    {
+        $this->db = Database::getDB();
+    }
 
     public function save()
     {
-        $conn = \Phonebook\Utils\Database::getDB();
         $sql = 'INSERT INTO contacts (contact_name, contact_phone) VALUES (:name, :phone)';
-        $stmt = $conn->prepare($sql);
-        $stmt->bindValue(':name', $this->name, \PDO::PARAM_STR);
-        $stmt->bindValue(':phone', $this->phone, \PDO::PARAM_STR);
-
-        $error = $stmt->execute();
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':name', $this->contact_name, \PDO::PARAM_STR);
+        $stmt->bindValue(':phone', $this->contact_phone, \PDO::PARAM_STR);
+        return $stmt->execute();
     }
 
+    public function update()
+    {
+        $sql = 'UPDATE contacts SET contact_name = :name, contact_phone = :phone WHERE contact_id = :id;';
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':name', $this->contact_name, \PDO::PARAM_STR);
+        $stmt->bindValue(':phone', $this->contact_phone, \PDO::PARAM_STR);
+        $stmt->bindValue(':id', $this->contact_id, \PDO::PARAM_INT);
+        return $stmt->execute();
+    }
 
+    public function delete()
+    {
+        $sql = 'DELETE FROM contacts WHERE contact_id=:id';
+        // $sql = 'DELETE FROM ' . static::$tableName . ' WHERE id=' . $id;
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':id', $this->contact_id, \PDO::PARAM_INT);
+        $result = $stmt->execute();
+        return $result;
+    }
 
-    // $message = '';
-    //
-    // if ( isset($_POST['name']) && isset($_POST['phone']) ) {
-    // 	$name = $_POST['name'];
-    // 	$phone = $_POST['phone'];
-    // 	$sql = 'INSERT INTO contacts(contact_name, contact_phone) VALUES (:name, :phone)';
-    // 	$statement = $db_connect->prepare($sql);
-    //
-    // 	if ($statement->execute(array(
-    // 		':name' => $name,
-    // 		':phone' 	=> $phone
-    // 		)))
-    // 		{
-    // 		$message = 'Contact ajouté';
-    // 		header("Refresh: 0.5; url=index.php");
-    // 	}
-    // }
+    public static function findById($id)
+    {
+        $db = Database::getDB();
+        $sql = 'SELECT * FROM contacts WHERE contact_id = :id';
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':id', $id, \PDO::PARAM_INT);
+        $stmt->execute();
 
-
-
-
+        return $stmt->fetchObject(__CLASS__);
+    }
 
     public static function findByNameAndNum($q)
     {
-        $conn = \Phonebook\Utils\Database::getDB();
+        $db = Database::getDB();
         $sql = "SELECT * FROM contacts WHERE contact_name LIKE '%$q%' OR contact_phone LIKE '%$q%' ORDER BY contact_name ASC";
-        $contacts = $conn->query($sql);
-
+        $contacts = $db->query($sql);
         return $contacts->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     public static function findByEmptySearch($q)
     {
-        $conn = \Phonebook\Utils\Database::getDB();
+        $db = Database::getDB();
         $sql = "SELECT * FROM contacts WHERE CONCAT(contact_name, contact_phone) LIKE '%$q%' ORDER BY contact_name ASC";
-        $contacts = $conn->query($sql);
-
+        $contacts = $db->query($sql);
         return $contacts->fetchAll(\PDO::FETCH_ASSOC);
     }
-
-    // Supprime le contact en BDD
-    public static function delete_contact($id)
-    {
-        // $id = $this->id;
-        // $id = $_GET['id'];
-        $conn = \Phonebook\Utils\Database::getDB();
-
-        $sql = 'DELETE FROM contacts WHERE id=:id';
-        // $sql = 'DELETE FROM ' . static::$tableName . ' WHERE id=' . $id;
-        $stmt = $conn->prepare($sql);
-        if ($stmt->execute([':id' => $id])) {
-        // On exécute la requête
-        // return;
-        // $conn->exec($sql);
-      }
-    }
-
 
     /**
      * Get the value of Id
@@ -90,9 +80,8 @@ class ContactsModel extends CoreModel
      */
     public function getId()
     {
-        return $this->id;
+        return $this->contact_id;
     }
-
     /**
      * Set the value of Id
      *
@@ -102,21 +91,18 @@ class ContactsModel extends CoreModel
      */
     public function setId($id)
     {
-        $this->id = $id;
-
+        $this->contact_id = $id;
         return $this;
     }
-
     /**
      * Get the value of Contacts
      *
      * @return mixed
      */
-    public function getContact()
+    public function getName()
     {
-        return $this->contact;
+        return $this->contact_name;
     }
-
     /**
      * Set the value of Contacts
      *
@@ -124,13 +110,11 @@ class ContactsModel extends CoreModel
      *
      * @return self
      */
-    public function setContact($contact)
+    public function setName($contact)
     {
-        $this->contact = $contact;
-
+        $this->contact_name = $contact;
         return $this;
     }
-
     /**
      * Get the value of Phone
      *
@@ -138,9 +122,8 @@ class ContactsModel extends CoreModel
      */
     public function getPhone()
     {
-        return $this->phone;
+        return $this->contact_phone;
     }
-
     /**
      * Set the value of Phone
      *
@@ -150,9 +133,7 @@ class ContactsModel extends CoreModel
      */
     public function setPhone($phone)
     {
-        $this->phone = $phone;
-
+        $this->contact_phone = $phone;
         return $this;
     }
-
 }
