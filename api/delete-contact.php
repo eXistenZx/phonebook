@@ -1,14 +1,14 @@
 <?php
 include('header.php');
 
-if( !empty($_GET['contact_id']) ){
+if( !empty($_GET['id'])){
     $sql = $db_connect->prepare("DELETE FROM contacts WHERE contact_id = :id");
-    $sql->bindParam(':id', $_GET['contact_id']);
+    $sql->bindParam(':id', $_GET['id']);
     $sql->execute();
-    $return["success"] = true;
-    $return["message"] = "Le contact est supprimé";
+    $response["success"] = true;
+    $response["message"] = "Le contact est supprimé";
 } else {
-    $return["success"] = false;
-    $return["message"] = "Il manque des informations";
+    $response["success"] = false;
+    $response["message"] = "Erreur";
 }
-echo json_encode($return);
+echo json_encode($response);

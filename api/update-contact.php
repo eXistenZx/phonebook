@@ -1,28 +1,21 @@
 <?php
-header('Content-Type: application/json');
-
 include('header.php');
 
+$id = $_POST["id"];
 $name = $_POST["name"];
 $phone = $_POST["phone"];
 
 if ( !empty($name) && !empty($phone) ) {
 
     if( is_numeric($phone) && strlen($phone) >= 10 ) {
-        $sql = $db_connect->prepare("INSERT INTO contacts (contact_id, contact_name, contact_phone) VALUES (NULL, :name, :phone)");
+        $sql = $db_connect->prepare("UPDATE contacts SET contact_name = :name, contact_phone = :phone WHERE contact_id = :id");
+        $sql->bindParam(':id', $id);
         $sql->bindParam(':name', $name);
         $sql->bindParam(':phone', $phone);
         $sql->execute();
-
-        $id = $db_connect->lastInsertId();
-
         $return["success"] = true;
-        $return["message"] = "Le contact a bien été ajouté";
-        $return["results"] = array(
-                                'id' => $id,
-                                'name' => $name,
-                                'phone' => $phone
-                            );
+        $return["message"] = "Le contact a bien été modifié";
+        $return["results"] = array();
     }	else {
         $return["success"] = false;
         $return["message"] = "Le numéro de téléphone a un format invalide";

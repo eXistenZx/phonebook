@@ -1,5 +1,5 @@
 <?php
 $host = "localhost";
 $dbname = "phone_book";
-$user = "telemaque";
-$pass = "telemaque";
+$user = "root";
+$pass = "";
